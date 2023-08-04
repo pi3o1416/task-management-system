@@ -16,8 +16,8 @@ services:
             dockerfile: Dockerfile
         command: ./deployment/start-app
         networks:
-            - app-tier-tms
             - external_network
+            - app-tier-tms
         env_file:
             - .env
         ports:
