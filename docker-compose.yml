@@ -1,0 +1,24 @@
+version: "3"
+
+networks:
+    app-tier-tms:
+        driver: bridge
+    external_network:
+        external: true
+
+services:
+    tms_web:
+        container_name: tms_web
+        restart: always
+        user: "0:0"
+        build:
+            context: .
+            dockerfile: Dockerfile
+        command: ./deployment/start-app
+        networks:
+            - app-tier-tms
+            - external_network
+        env_file:
+            - .env
+        ports:
+            - "127.0.0.1:8001:8000"
