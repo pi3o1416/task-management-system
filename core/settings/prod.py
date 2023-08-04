@@ -3,6 +3,9 @@ from .base import *
 
 ALLOWED_HOSTS = ['tms.monirhossain.dev', '103.174.51.237']
 
+# CSRF trusted origin
+CSRF_TRUSTED_ORIGINS = ['https://tms.monirhossain.dev']
+
 
 DATABASES = {
     'default': {
