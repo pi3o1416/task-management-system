@@ -22,3 +22,8 @@ services:
             - .env
         ports:
             - "127.0.0.1:8001:8000"
+        volumes:
+            - .:/app
+            - /home/docker-storage/task-management-system/public/static:/app/public/static
+            - /home/docker-storage/task-management-system/media:/app/media
+
