@@ -44,6 +44,7 @@ jobs:
                   PROD_DB_PORT: 5432
                   PROD_DB_USER: postgres
                   PROD_DB_PASS: temppass
+                  PROD_DB_NAME: test_db
               run: |
                   python manage.py test
             - name: Deploy to live server
