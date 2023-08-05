@@ -37,8 +37,8 @@ jobs:
                   #                    flake8 .
             - name: Run Test
               env:
-                  DEBUG: True
-                  IS_PRODUCTION_SERVER: True
+                  DEBUG: 'True'
+                  IS_PRODUCTION_SERVER: 'True'
                   SECRET_KEY: testsecretkey
                   PROD_DB_HOST: 127.0.0.1
                   PROD_DB_PORT: 5432
