@@ -37,10 +37,10 @@ jobs:
                   #                    flake8 .
             - name: Run Test
               env:
-                  DB: postgres
-                  DB_HOST: 127.0.0.1
-                  DB_PORT: 5432
-                  DB_PASSWORD: temppass
+                  IS_PRODUCTION_SERVER: True
+                  PROD_DB_HOST: 127.0.0.1
+                  PROD_DB_PORT: 5432
+                  PROD_DB_PASSWORD: temppass
               run: |
                   python manage.py test
             - name: Deploy to live server
