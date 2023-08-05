@@ -1,0 +1,26 @@
+name: Task management system CI/CD
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: SSH to remote server
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.KEY }}
+                  port: ${{ secrets.PORT }}
+                  passphrase: ${{ secrets.PASSPHRASE }}
+                  script: |
+                      cd django/task-management-system/
+                      git pull origin master --rebase
+                      chmod +x deployment/*
+                      docker-compose build
+                      docker-compose up -d
