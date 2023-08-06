@@ -103,9 +103,6 @@
     <body>
         <div id="notfound">
             <div class="notfound">
-                <a href="docs/swagger">Project Swagger Documentation</a>
-                <a href="docs/redoc">Project Redoc Documentation</a>
-                <!--
                 <div class="notfound-404"></div>
                 <h1>404</h1>
                 <h2>
@@ -115,7 +112,13 @@
                     Sorry but the page you are looking for does not exist, have
                     been removed. name changed or is temporarily unavailable
                 </p>
-                -->
+                <ul>
+                    <li><a href="{% url 'swagger' %}">Project Swagger Documentation</a></li>
+                    <li><a href=" {% url 'redoc' %}">Project Redoc Documentation</a></li>
+                    <li><a href="https://github.com/pi3o1416/task-management-system">Github Link</a></li>
+                </ul>
+                
+                
             </div>
         </div>
     </body>
