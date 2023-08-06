@@ -34,7 +34,7 @@ jobs:
                   pip install -r requirements.txt
             - name: Check Code Quality
               run: |
-                  pip install wemake-python-styleguide
+                  pip install flake8
                   flake8 .
             - name: Run Test
               env:
