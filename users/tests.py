@@ -4,5 +4,5 @@ from django.test import TestCase
 
 
 class TempTest(TestCase):
-    def test_0(self):
-        self.assertTrue(True, "ok")
+    def test_0(self) -> None:
+        self.assertTrue(True, 'ok')
