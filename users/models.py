@@ -36,9 +36,13 @@ class CustomUser(DirtyFieldsMixin, AbstractUser):
         blank=False,
         null=False,
     )
+    email_verified = models.BooleanField(
+        _('Email Verified'),
+        default=False,
+    )
     is_active = models.BooleanField(
         _('active'),
-        default=False,
+        default=True,
         help_text=_(
             'Designates whether this user should be treated as active. '
             'Unselect this instead of deleting accounts.'
