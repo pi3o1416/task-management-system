@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+import pygments.formatters
 from datetime import timedelta
 from environ import Env
 from . import BASE_DIR
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_cleanup.apps.CleanupConfig',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -183,3 +185,9 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "A task management project to maintain tasks efficiently",
     "VERSION": "0.0.1",
 }
+
+# Shell plus configuration
+SHELL_PLUS = "ipython"
+SHELL_PLUS_PRINT_SQL = True
+SHELL_PLUS_PYGMENTS_FORMATTER = pygments.formatters.TerminalFormatter
+SHELL_PLUS_PYGMENTS_FORMATTER_KWARGS = {}
