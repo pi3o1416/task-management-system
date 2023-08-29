@@ -11,6 +11,7 @@
 /db.sqlite3
 
 media/*
+static/*
 dev.env
 .env
 .idea
