@@ -63,5 +63,4 @@ jobs:
                       cd django/task-management-system/
                       git pull origin master --rebase
                       chmod +x deployment/*
-                      docker-compose build
-                      docker-compose up -d
+                      ./deployment/deployscript
