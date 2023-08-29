@@ -2,9 +2,12 @@
 import os
 from django.db import models
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import UserManager
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 from dirtyfields import DirtyFieldsMixin
+
+from .exceptions import UserUpdateFailed
 
 
 def user_photo_upload_path(instance: 'CustomUser', uploaded_file: str) -> str:
@@ -12,43 +15,55 @@ def user_photo_upload_path(instance: 'CustomUser', uploaded_file: str) -> str:
     return 'users-photos/{0}/profile_picture{1}'.format(instance.username, file_extension)
 
 
+class CustomUserManager(UserManager):
+    pass
+
+
 class CustomUser(DirtyFieldsMixin, AbstractUser):
     photo = models.ImageField(
-        verbose_name=_('User photo'),
+        verbose_name=_('User Photo'),
         upload_to=user_photo_upload_path,
         blank=True,
         null=True,
     )
     email = models.EmailField(
-        _('email address'),
+        _('Email'),
         blank=False,
         unique=True,
         null=False,
     )
     first_name = models.CharField(
-        _('first name'),
+        _('First Name'),
         max_length=150,
-        blank=False,
-        null=False,
+        blank=True,
+        default=''
     )
     last_name = models.CharField(
-        _('last name'),
+        _('Last Name'),
         max_length=150,
-        blank=False,
-        null=False,
+        blank=True,
+        default=''
     )
-    email_verified = models.BooleanField(
-        _('Email Verified'),
+    is_email_verified = models.BooleanField(
+        _('Is Email Verified'),
         default=False,
     )
     is_active = models.BooleanField(
-        _('active'),
+        _('Is Active'),
         default=True,
         help_text=_(
             'Designates whether this user should be treated as active. '
             'Unselect this instead of deleting accounts.'
         ),
     )
+    objects = CustomUserManager()
+
+    def save(self, *args, **kwargs) -> None:
+        if self.pk is not None:
+            dirty_fields = self.get_dirty_fields()
+            if 'username' in dirty_fields or 'email' in dirty_fields:
+                raise UserUpdateFailed(message='Username and email can not be updated')
+        return super().save(*args, **kwargs)
 
     @property
     def full_name(self) -> str:
