@@ -1,21 +1,17 @@
 
+import factory
+import factory.random
 from django.test import TestCase
+
 from ..models import CustomUser
+from ..factories import CustomUserFactory
+from ..exceptions import UserUpdateFailed
 
 
 class CustomUserTest(TestCase):
     def setUp(self) -> None:
-        self._password = '1234'
-        user: CustomUser = CustomUser(
-            username='testuser',
-            email='test@gmail.com',
-            first_name='test',
-            last_name='test',
-            is_email_verified=True,
-            is_active=True,
-        )
-        user.set_password(self._password)
-        user.save()
+        factory.random.reseed_random('users')
+        CustomUserFactory.create(username='testuser')
 
     def test_photo_field(self) -> None:
         photo_field = CustomUser._meta.get_field('photo')
@@ -60,6 +56,42 @@ class CustomUserTest(TestCase):
         self.assertEqual(active_field.default, True, 'Initially default value should be True')
         self.assertEqual(active_field.verbose_name, 'Is Active', 'Verbose Name did not matched')
 
-    def test_password(self) -> None:
+    def test_username_update_restriction(self) -> None:
+        try:
+            user: CustomUser = CustomUser.objects.get(username='testuser')
+            user.username = 'newusername'
+            user.save()
+            raise Exception
+        except Exception as exception:
+            self.assertTrue(
+                isinstance(exception, UserUpdateFailed),
+                'Username update is not restricted'
+            )
+
+    def test_email_update_restriction(self) -> None:
+        try:
+            user: CustomUser = CustomUser.objects.get(username='testuser')
+            user.email = 'newemail@gmail.com'
+            user.save()
+            raise Exception
+        except Exception as exception:
+            self.assertTrue(
+                isinstance(exception, UserUpdateFailed),
+                'Email update is not restricted'
+            )
+
+    def test_full_name_property(self) -> None:
         user: CustomUser = CustomUser.objects.get(username='testuser')
-        self.assertTrue(user.check_password(self._password), 'Password did not matched')
+        self.assertEqual(
+            user.full_name, '{first_name} {last_name}'.format(first_name=user.first_name, last_name=user.last_name),
+            'Full name property is not working'
+        )
+
+    def test_token_validation(self) -> None:
+        user1: CustomUser = CustomUserFactory.create()
+        user2: CustomUser = CustomUserFactory.create()
+        user1_token = user1.generate_token()
+        user2_token = user2.generate_token()
+        self.assertTrue(user1.is_token_valid(user1_token), 'Token should be valid')
+        self.assertFalse(user1.is_token_valid(user2_token), 'Token should be invalid')
+        self.assertFalse(user2.is_token_valid(user1_token), 'Token should be invalid')
